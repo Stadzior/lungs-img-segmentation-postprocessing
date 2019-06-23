@@ -4,20 +4,29 @@ import os
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import base64
+import io
 
-def Generate3dSplay():    
-    ct_image_layered = []
-    for file in filter(lambda x: x.endswith(".png"), os.listdir(".")):
-        f = open(file, 'rb')
-        b64_img_str = base64.b64encode(f.read())
-        img_bytes = bytearray(b64_img_str)
-        ct_image_layered.append(img_bytes)
+def GenerateRawFileFromPngs():  
+    for mhdFile in filter(lambda x: x.endswith(".mhd"), os.listdir(".")):
+        fileName = mhdFile.replace(".mhd","")
+        ct_image_layered = []
+        for pngFile in filter(lambda x: x.startswith(fileName) and x.endswith(".png"), os.listdir(".")):
+            img = Image.open(pngFile, mode='r')
+            img_array = np.asarray(img)
+            img_str = img_array.tostring()
+            ct_image_layered.append(img_str) 
+        ct_image_str = b''.join(ct_image_layered)  
+        with open("{0}.raw".format(fileName), "wb") as rawFile:
+            rawFile.write(ct_image_str)
 
-    ct_image_layered.reverse()
-    ct_image_str = "".join(ct_image_layered)
+def Generate3dSplay():  
+    for mhdFile in filter(lambda x: x.endswith(".mhd"), os.listdir(".")):
+        fileName = mhdFile.replace(".mhd","")
+        ct_image_layered = Build3dByteArrayFromPngs(fileName)
 
-    with open("output.raw", "w") as rawFile:
-        rawFile.write(ct_image_str)
+        with open("{0}.raw".format(fileName), "wb") as rawFile:
+            rawFile.write(ct_image_str)
+
     # fig = plt.figure()
     # plt.imshow(ct_image, cmap=plt.cm.gray)
     # plt.show()
