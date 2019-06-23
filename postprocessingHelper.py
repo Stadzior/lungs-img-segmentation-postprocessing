@@ -22,17 +22,42 @@ def GenerateRawFileFromPngs():
 def Generate3dSplay():  
     for mhdFile in filter(lambda x: x.endswith(".mhd"), os.listdir(".")):
         fileName = mhdFile.replace(".mhd","")
-        ct_image_layered = Build3dByteArrayFromPngs(fileName)
+        ct_image_layered = []
+        for pngFile in filter(lambda x: x.startswith(fileName) and x.endswith(".png"), os.listdir(".")):
+            img = Image.open(pngFile, mode='r')
+            img_array = np.asarray(img)
+            xlim, zlim = img.size
+            xlim = xlim-1
+            zlim = zlim-1
+            ct_image_layered.append(img_array) 
+        ylim = len(ct_image_layered)-1
 
-        with open("{0}.raw".format(fileName), "wb") as rawFile:
-            rawFile.write(ct_image_str)
-
-    # fig = plt.figure()
-    # plt.imshow(ct_image, cmap=plt.cm.gray)
-    # plt.show()
+        #create figure
+        fig = plt.figure()
+        ax = fig.gca(projection='3d')
     
+        # plotting
+        for yIndex in range (0, ylim):
+            for zIndex in range(0,zlim):
+                x = [i for i, value in enumerate(ct_image_layered[yIndex][zIndex]) if value > 0]
+                y = [yIndex] * len(x) 
+                z = [zIndex] * len(x) 
+                ax.plot(x,y,z)
+        #ax.plot(x, y, z)
+
+        # Make legend, set axes limits and labels
+        ax.legend()
+        ax.set_zlim(0, zlim)
+        ax.set_xlim(0, xlim)
+        ax.set_ylim(0, ylim)
+        ax.set_xlabel('Coronal')
+        ax.set_ylabel('Axial')
+        ax.set_zlabel('Sagittal')
+
+        # Customize the view angle so it's easier to see that the scatter points lie on the plane y=0
+        ax.view_init(elev=20., azim=-35)
+        plt.show()
 # fig = plt.figure()
-# ax = fig.gca(projection='3d')
 
 # # Plot a sin curve using the x and y axes.
 # x = np.linspace(0, 1, 100)
@@ -50,17 +75,6 @@ def Generate3dSplay():
 # # and the (x,y) points are plotted on the x and z axes.
 # ax.scatter(x, y, zs=0, zdir='y', c=c_list, label='points in (x,z)')
 
-# # Make legend, set axes limits and labels
-# ax.legend()
-# ax.set_xlim(0, 1)
-# ax.set_ylim(0, 1)
-# ax.set_zlim(0, 1)
-# ax.set_xlabel('X')
-# ax.set_ylabel('Y')
-# ax.set_zlabel('Z')
 
-# # Customize the view angle so it's easier to see that the scatter points lie
-# # on the plane y=0
-# ax.view_init(elev=20., azim=-35)
 
 # plt.show()
