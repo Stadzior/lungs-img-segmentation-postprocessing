@@ -3,6 +3,7 @@ from PIL import Image
 import os
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
+from matplotlib.collections import PolyCollection
 import base64
 import io
 
@@ -26,37 +27,42 @@ def Generate3dSplay():
         for pngFile in filter(lambda x: x.startswith(fileName) and x.endswith(".png"), os.listdir(".")):
             img = Image.open(pngFile, mode='r')
             img_array = np.asarray(img)
-            xlim, zlim = img.size
+            xlim, ylim = img.size
             xlim = xlim-1
-            zlim = zlim-1
+            ylim = ylim-1
             ct_image_layered.append(img_array) 
-        ylim = len(ct_image_layered)-1
-
+        zlim = len(ct_image_layered)-1
         #create figure
         fig = plt.figure()
         ax = fig.gca(projection='3d')
     
         # plotting
-        for yIndex in range (0, ylim):
-            for zIndex in range(0,zlim):
-                x = [i for i, value in enumerate(ct_image_layered[yIndex][zIndex]) if value > 0]
-                y = [yIndex] * len(x) 
-                z = [zIndex] * len(x) 
-                ax.plot(x,y,z)
-        #ax.plot(x, y, z)
-
-        # Make legend, set axes limits and labels
-        ax.legend()
-        ax.set_zlim(0, zlim)
-        ax.set_xlim(0, xlim)
-        ax.set_ylim(0, ylim)
+        print("before plotting")
+        z = list(range(0, zlim))
+        for zIndex in range (0, zlim):
+            print("{0}/{1}".format(zIndex+1, zlim+1))
+            verticies = []
+            for yIndex in range(0,ylim):
+                x = [i for i, value in enumerate(ct_image_layered[zIndex][yIndex]) if value > 0]
+                if (x):
+                    y = [yIndex] * len(x)                 
+                    verticies.append(list(zip(x,y)))
+            poly = PolyCollection(verticies)
+            poly.set_alpha(0.95)
+            ax.add_collection3d(poly, zs=zIndex)   
+        print("polygons built")
+        # Set axes limits and labels
+        ax.set_xlim3d(0, xlim)
+        ax.set_ylim3d(0, ylim)
+        ax.set_zlim3d(0, zlim)
         ax.set_xlabel('Coronal')
-        ax.set_ylabel('Axial')
-        ax.set_zlabel('Sagittal')
+        ax.set_ylabel('Sagittal')
+        ax.set_zlabel('Axial')
 
         # Customize the view angle so it's easier to see that the scatter points lie on the plane y=0
         ax.view_init(elev=20., azim=-35)
         plt.show()
+        print("showed")
 # fig = plt.figure()
 
 # # Plot a sin curve using the x and y axes.
