@@ -38,18 +38,16 @@ def Generate3dSplay():
     
         # plotting
         print("before plotting")
-        z = list(range(0, zlim))
-        for zIndex in range (0, zlim):
-            print("{0}/{1}".format(zIndex+1, zlim+1))
+        for z in range (0, zlim):
+            print("{0}/{1}".format(z+1, zlim+1))
             verticies = []
-            for yIndex in range(0,ylim):
-                x = [i for i, value in enumerate(ct_image_layered[zIndex][yIndex]) if value > 0]
-                if (x):
-                    y = [yIndex] * len(x)                 
-                    verticies.append(list(zip(x,y)))
+            for x in range (0, xlim):
+                for y in range (0, ylim):
+                    if (ct_image_layered[z][y][x] > 0 and CheckIfNotRedundantVertex(ct_image_layered[z], x, y)):
+                        #verticies.append(list(zip(x,y))) <--- to be fixed
             poly = PolyCollection(verticies)
             poly.set_alpha(0.95)
-            ax.add_collection3d(poly, zs=zIndex)   
+            ax.add_collection3d(poly, zs=z)   
         print("polygons built")
         # Set axes limits and labels
         ax.set_xlim3d(0, xlim)
@@ -63,24 +61,7 @@ def Generate3dSplay():
         ax.view_init(elev=20., azim=-35)
         plt.show()
         print("showed")
-# fig = plt.figure()
 
-# # Plot a sin curve using the x and y axes.
-# x = np.linspace(0, 1, 100)
-# y = np.sin(x * 2 * np.pi) / 2 + 0.5
-# ax.plot(x, y, zs=0, zdir='z', label='curve in (x,y)')
-
-# # Plot scatterplot data (20 2D points per colour) on the x and z axes.
-# colors = ('r', 'g', 'b', 'k')
-# x = np.random.sample(20*len(colors))
-# y = np.random.sample(20*len(colors))
-# c_list = []
-# for c in colors:
-#     c_list.append([c]*20)
-# # By using zdir='y', the y value of these points is fixed to the zs value 0
-# # and the (x,y) points are plotted on the x and z axes.
-# ax.scatter(x, y, zs=0, zdir='y', c=c_list, label='points in (x,z)')
-
-
-
-# plt.show()
+def CheckIfNotRedundantVertex(layer, x, y):
+    xMax, yMax = layer.shape
+    return (x > 0 and y > 0 and layer[x-1][y-1] == 0) or (y > 0 and layer[x][y-1] == 0) or (x < xMax - 1 and y > 0 and layer[x+1][y-1] == 0) or (x < xMax - 1 and layer[x+1][y] == 0) or (x < xMax - 1 and y < yMax - 1 and layer[x+1][y+1] == 0) or (y < yMax - 1 and layer[x][y+1] == 0) or (x > 0 and y < yMax - 1 and layer[x-1][y+1] == 0) or (x > 0 and layer[x-1][y] == 0)
