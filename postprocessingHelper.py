@@ -44,8 +44,8 @@ def Generate3dSplay():
             for x in range (0, xlim):
                 for y in range (0, ylim):
                     if (ct_image_layered[z][y][x] > 0 and CheckIfNotRedundantVertex(ct_image_layered[z], x, y)):
-                        #verticies.append(list(zip(x,y))) <--- to be fixed
-            poly = PolyCollection(verticies)
+                        verticies.append((x,y))
+            poly = PolyCollection(np.asarray(verticies))
             poly.set_alpha(0.95)
             ax.add_collection3d(poly, zs=z)   
         print("polygons built")
