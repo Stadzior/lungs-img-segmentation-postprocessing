@@ -2,36 +2,26 @@ import numpy as np
 from PIL import Image
 import os
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+import base64
 
 def Generate3dSplay():    
-    ct_image = []
+    ct_image_layered = []
     for file in filter(lambda x: x.endswith(".png"), os.listdir(".")):
         f = open(file, 'rb')
-        img_str = f.read()
+        b64_img_str = base64.b64encode(f.read())
+        img_bytes = bytearray(b64_img_str)
+        ct_image_layered.append(img_bytes)
 
-        layer_dimensions = (512, 512)
-        # converting to a int8 numpy array
-        layer_as_vector = np.fromstring(img_str, dtype=np.int8)
-        layer = np.reshape(layer_as_vector, layer_dimensions)
-        ct_image.append(layer)
+    ct_image_layered.reverse()
+    ct_image_str = "".join(ct_image_layered)
 
-    ct_image.reverse()
-    plt.imshow(ct_image, cmap=plt.cm.gray)
-    plt.show()
-
-# """
-# =======================
-# Plot 2D data on 3D plot
-# =======================
-
-# Demonstrates using ax.plot's zdir keyword to plot 2D data on
-# selective axes of a 3D plot.
-# """
-
-# from mpl_toolkits.mplot3d import Axes3D
-# import numpy as np
-# import matplotlib.pyplot as plt
-
+    with open("output.raw", "w") as rawFile:
+        rawFile.write(ct_image_str)
+    # fig = plt.figure()
+    # plt.imshow(ct_image, cmap=plt.cm.gray)
+    # plt.show()
+    
 # fig = plt.figure()
 # ax = fig.gca(projection='3d')
 
