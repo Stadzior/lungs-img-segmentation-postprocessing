@@ -9,7 +9,9 @@ import io
 import re
 
 def GenerateRawFileFromPngs():  
-    for mhdFile in filter(lambda x: x.endswith(".mhd"), os.listdir(".")):
+    files = list(filter(lambda x: x.endswith(".mhd"), os.listdir(".")))
+    for i, mhdFile in enumerate(files):
+        print("{0}/{1} {2}".format(i, len(files), mhdFile))
         fileName = mhdFile.replace(".mhd","")
         pngFiles = FindPngFilesWithFileName(fileName)
         ct_image_layered = []
@@ -23,7 +25,9 @@ def GenerateRawFileFromPngs():
             rawFile.write(ct_image_str)
 
 def Generate3dSplay():  
-    for mhdFile in filter(lambda x: x.endswith(".mhd"), os.listdir(".")):
+    files = list(filter(lambda x: x.endswith(".mhd"), os.listdir(".")))
+    for i, mhdFile in enumerate(files):
+        print("{0}/{1} {2}".format(i, len(files), mhdFile))
         fileName = mhdFile.replace(".mhd","")
         pngFileNames = FindPngFilesWithFileName(fileName)
         ct_image_layered = []
