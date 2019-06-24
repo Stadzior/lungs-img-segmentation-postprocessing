@@ -1,66 +1,48 @@
-Splay 3D generation started at 23-06-2019, 12:09:33.
-Splay 3D generation started at 23-06-2019, 12:11:42.
-Splay 3D generation started at 23-06-2019, 12:13:54.
-Splay 3D generation started at 23-06-2019, 12:17:32.
-Splay 3D generation started at 23-06-2019, 12:20:35.
-Splay 3D generation started at 23-06-2019, 12:36:12.
-Splay 3D generation started at 23-06-2019, 12:45:14.
-Splay 3D generation started at 23-06-2019, 12:54:45.
-Splay 3D generation started at 23-06-2019, 13:09:26.
-Splay 3D generation started at 23-06-2019, 13:10:06.
-Splay 3D generation started at 23-06-2019, 13:12:24.
-Splay 3D generation started at 23-06-2019, 13:20:48.
-Splay 3D generation started at 23-06-2019, 13:22:07.
-Splay 3D generation started at 23-06-2019, 13:23:00.
-Splay 3D generation ended at 23-06-2019, 13:23:04 and lasted 0h 0m 4s.
-Raw file generation started at 23-06-2019, 13:41:42.
-Raw file generation ended at 23-06-2019, 13:41:44 and lasted 0h 0m 2s.
-Splay 3D generation started at 23-06-2019, 13:59:34.
-Splay 3D generation started at 23-06-2019, 14:01:04.
-Splay 3D generation ended at 23-06-2019, 14:01:41 and lasted 0h 0m 37s.
-Splay 3D generation started at 23-06-2019, 14:02:49.
-Splay 3D generation ended at 23-06-2019, 14:03:05 and lasted 0h 0m 16s.
-Splay 3D generation started at 23-06-2019, 14:03:44.
-Splay 3D generation ended at 23-06-2019, 14:03:50 and lasted 0h 0m 5s.
-Splay 3D generation started at 23-06-2019, 14:04:05.
-Splay 3D generation started at 23-06-2019, 14:14:03.
-Splay 3D generation ended at 23-06-2019, 14:14:11 and lasted 0h 0m 8s.
-Splay 3D generation started at 23-06-2019, 14:23:51.
-Splay 3D generation ended at 23-06-2019, 14:23:55 and lasted 0h 0m 4s.
-Splay 3D generation started at 23-06-2019, 14:31:30.
-Splay 3D generation started at 23-06-2019, 14:43:03.
-Splay 3D generation started at 23-06-2019, 14:51:08.
-Splay 3D generation started at 23-06-2019, 14:53:06.
-Splay 3D generation started at 23-06-2019, 14:56:12.
-Splay 3D generation started at 23-06-2019, 14:58:38.
-Splay 3D generation started at 23-06-2019, 16:08:51.
-Splay 3D generation started at 23-06-2019, 16:25:31.
-Splay 3D generation started at 23-06-2019, 16:26:19.
-Splay 3D generation started at 23-06-2019, 16:32:12.
-Splay 3D generation started at 23-06-2019, 16:32:40.
-Splay 3D generation started at 23-06-2019, 16:34:46.
-Splay 3D generation ended at 23-06-2019, 16:34:58 and lasted 0h 0m 11s.
-Splay 3D generation started at 23-06-2019, 16:36:48.
-Splay 3D generation ended at 23-06-2019, 16:37:06 and lasted 0h 0m 18s.
-Splay 3D generation started at 23-06-2019, 16:39:03.
-Splay 3D generation ended at 23-06-2019, 16:39:13 and lasted 0h 0m 9s.
-Splay 3D generation started at 23-06-2019, 16:43:02.
-Splay 3D generation ended at 23-06-2019, 16:43:11 and lasted 0h 0m 8s.
-Splay 3D generation started at 23-06-2019, 16:44:07.
-Splay 3D generation started at 23-06-2019, 16:45:34.
-Splay 3D generation ended at 23-06-2019, 16:46:00 and lasted 0h 0m 25s.
-Splay 3D generation started at 23-06-2019, 16:47:07.
-Splay 3D generation started at 23-06-2019, 17:30:42.
-Splay 3D generation started at 23-06-2019, 17:33:20.
-Splay 3D generation started at 23-06-2019, 17:34:04.
-Splay 3D generation started at 23-06-2019, 17:35:32.
-Splay 3D generation started at 23-06-2019, 17:37:08.
-Splay 3D generation started at 23-06-2019, 17:38:32.
-Splay 3D generation started at 23-06-2019, 23:09:24.
-Splay 3D generation ended at 23-06-2019, 23:09:24 and lasted 0h 0m 0s.
-Splay 3D generation started at 23-06-2019, 23:09:43.
-Splay 3D generation ended at 23-06-2019, 23:09:43 and lasted 0h 0m 0s.
-Splay 3D generation started at 23-06-2019, 23:14:29.
-Splay 3D generation ended at 23-06-2019, 23:14:29 and lasted 0h 0m 0s.
-Splay 3D generation started at 23-06-2019, 23:19:10.
-Splay 3D generation ended at 23-06-2019, 23:19:10 and lasted 0h 0m 0s.
+Splay 3D generation started at 24-06-2019, 18:24:06.
+Splay 3D generation started at 24-06-2019, 18:29:05.
+Splay 3D generation started at 24-06-2019, 18:33:51.
+Raw file generation started at 24-06-2019, 18:36:39.
+Raw file generation ended at 24-06-2019, 18:36:40 and lasted 0h 0m 0s.
+Splay 3D generation started at 24-06-2019, 18:36:45.
+Raw file generation started at 24-06-2019, 18:38:52.
+Raw file generation ended at 24-06-2019, 18:38:53 and lasted 0h 0m 0s.
+Splay 3D generation started at 24-06-2019, 18:38:57.
+Splay 3D generation ended at 24-06-2019, 18:39:17 and lasted 0h 0m 19s.
+Raw file generation started at 24-06-2019, 18:39:49.
+Raw file generation ended at 24-06-2019, 18:39:49 and lasted 0h 0m 0s.
+Splay 3D generation started at 24-06-2019, 18:39:49.
+Raw file generation started at 24-06-2019, 18:40:08.
+Raw file generation ended at 24-06-2019, 18:40:09 and lasted 0h 0m 0s.
+Splay 3D generation started at 24-06-2019, 18:40:09.
+Raw file generation started at 24-06-2019, 18:41:05.
+Raw file generation ended at 24-06-2019, 18:41:06 and lasted 0h 0m 0s.
+Splay 3D generation started at 24-06-2019, 18:41:06.
+Raw file generation started at 24-06-2019, 18:43:07.
+Raw file generation ended at 24-06-2019, 18:43:08 and lasted 0h 0m 0s.
+Splay 3D generation started at 24-06-2019, 18:43:08.
+Splay 3D generation ended at 24-06-2019, 18:43:33 and lasted 0h 0m 25s.
+Raw file generation started at 24-06-2019, 18:43:59.
+Raw file generation ended at 24-06-2019, 18:43:59 and lasted 0h 0m 0s.
+Splay 3D generation started at 24-06-2019, 18:43:59.
+Splay 3D generation ended at 24-06-2019, 18:49:51 and lasted 0h 5m 51s.
+Raw file generation started at 24-06-2019, 18:51:00.
+Raw file generation ended at 24-06-2019, 18:51:01 and lasted 0h 0m 0s.
+Splay 3D generation started at 24-06-2019, 18:51:01.
+Raw file generation started at 24-06-2019, 20:27:10.
+Raw file generation started at 24-06-2019, 21:13:54.
+Raw file generation started at 24-06-2019, 21:14:36.
+Raw file generation started at 24-06-2019, 21:15:44.
+Raw file generation started at 24-06-2019, 21:21:33.
+Raw file generation started at 24-06-2019, 21:21:51.
+Raw file generation started at 24-06-2019, 21:23:07.
+Raw file generation started at 24-06-2019, 21:25:19.
+Raw file generation started at 24-06-2019, 21:26:21.
+Raw file generation started at 24-06-2019, 21:39:07.
+Raw file generation started at 24-06-2019, 21:43:17.
+Raw file generation started at 24-06-2019, 21:43:40.
+Raw file generation started at 24-06-2019, 21:45:41.
+Raw file generation ended at 24-06-2019, 21:45:44 and lasted 0h 0m 2s.
+Raw file generation started at 24-06-2019, 21:46:08.
+Raw file generation ended at 24-06-2019, 21:47:06 and lasted 0h 0m 58s.
+Raw file generation started at 24-06-2019, 21:47:50.
+Raw file generation ended at 24-06-2019, 21:47:51 and lasted 0h 0m 0s.

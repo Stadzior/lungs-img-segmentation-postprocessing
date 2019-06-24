@@ -6,13 +6,15 @@ from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.collections import PolyCollection
 import base64
 import io
+import re
 
 def GenerateRawFileFromPngs():  
     for mhdFile in filter(lambda x: x.endswith(".mhd"), os.listdir(".")):
         fileName = mhdFile.replace(".mhd","")
+        pngFiles = FindPngFilesWithFileName(fileName)
         ct_image_layered = []
-        for pngFile in filter(lambda x: x.startswith(fileName) and x.endswith(".png"), os.listdir(".")):
-            img = Image.open(pngFile, mode='r')
+        for (index, pngFileName) in pngFiles:
+            img = Image.open(pngFileName, mode='r')
             img_array = np.asarray(img)
             img_str = img_array.tostring()
             ct_image_layered.append(img_str) 
@@ -23,8 +25,9 @@ def GenerateRawFileFromPngs():
 def Generate3dSplay():  
     for mhdFile in filter(lambda x: x.endswith(".mhd"), os.listdir(".")):
         fileName = mhdFile.replace(".mhd","")
+        pngFileNames = FindPngFilesWithFileName(fileName)
         ct_image_layered = []
-        for pngFile in filter(lambda x: x.startswith(fileName) and x.endswith(".png"), os.listdir(".")):
+        for pngFile in pngFileNames:
             img = Image.open(pngFile, mode='r')
             img_array = np.asarray(img)
             xlim, ylim = img.size
@@ -45,9 +48,9 @@ def Generate3dSplay():
                 for y in range (0, ylim):
                     if (ct_image_layered[z][y][x] > 0 and CheckIfNotRedundantVertex(ct_image_layered[z], x, y)):
                         verticies.append((x,y))
-            poly = PolyCollection(np.asarray(verticies))
-            poly.set_alpha(0.95)
-            ax.add_collection3d(poly, zs=z)   
+            if (verticies):
+                poly = PolyCollection([verticies])
+                ax.add_collection3d(poly, zs=z)   
         print("polygons built")
         # Set axes limits and labels
         ax.set_xlim3d(0, xlim)
@@ -61,6 +64,13 @@ def Generate3dSplay():
         ax.view_init(elev=20., azim=-35)
         plt.show()
         print("showed")
+
+def FindPngFilesWithFileName(fileName):
+    pngFileNames = filter(lambda x: x.startswith(fileName) and x.endswith(".png"), os.listdir("."))
+    extractIndexFromFileName = lambda x: (int(re.search("_[\d]+.png", x).group(0).replace("_", "").replace(".png", "")))
+    pngFiles = [(extractIndexFromFileName(x), x) for x in pngFileNames]
+    pngFiles.sort(key = lambda x: x[0])
+    return pngFiles
 
 def CheckIfNotRedundantVertex(layer, x, y):
     xMax, yMax = layer.shape
