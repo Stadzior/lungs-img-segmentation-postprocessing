@@ -8,11 +8,10 @@ import base64
 import io
 import re
 
-def GenerateRawFileFromPngs():  
-    files = list(filter(lambda x: x.endswith(".mhd"), os.listdir(".")))
-    for i, mhdFile in enumerate(files):
-        print("{0}/{1} {2}".format(i, len(files), mhdFile))
-        fileName = mhdFile.replace(".mhd","")
+def GenerateRawFileFromPngs(files):  
+    for i, file in enumerate(files):
+        print("{0}/{1} {2}".format(i, len(files), file))
+        fileName = file.replace(".mhd","")
         pngFiles = FindPngFilesWithFileName(fileName)
         ct_image_layered = []
         for (index, pngFileName) in pngFiles:
@@ -24,11 +23,10 @@ def GenerateRawFileFromPngs():
         with open("{0}.raw".format(fileName), "wb") as rawFile:
             rawFile.write(ct_image_str)
 
-def Generate3dSplay():  
-    files = list(filter(lambda x: x.endswith(".mhd"), os.listdir(".")))
-    for i, mhdFile in enumerate(files):
-        print("{0}/{1} {2}".format(i, len(files), mhdFile))
-        fileName = mhdFile.replace(".mhd","")
+def Generate3dSplay(files):  
+    for i, file in enumerate(files):
+        print("{0}/{1} {2}".format(i, len(files), file))
+        fileName = file.replace(".mhd","")
         pngFileNames = FindPngFilesWithFileName(fileName)
         ct_image_layered = []
         for pngFile in pngFileNames:
