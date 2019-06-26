@@ -11,25 +11,25 @@ import re
 def GenerateRawFileFromPngs(files):  
     for i, file in enumerate(files):
         print("{0}/{1} {2}".format(i, len(files), file))
-        fileName = file.replace(".mhd","")
-        pngFiles = FindPngFilesWithFileName(fileName)
+        filename = file.replace(".mhd","")
+        png_files = FindPngFilesWithFileName(filename)
         ct_image_layered = []
-        for (index, pngFileName) in pngFiles:
-            img = Image.open(pngFileName, mode='r')
+        for (index, png_file_name) in png_files:
+            img = Image.open(png_file_name, mode='r')
             img_array = np.asarray(img)
             img_str = img_array.tostring()
             ct_image_layered.append(img_str) 
         ct_image_str = b''.join(ct_image_layered)  
-        with open("{0}.raw".format(fileName), "wb") as rawFile:
+        with open("{0}.raw".format(filename), "wb") as rawFile:
             rawFile.write(ct_image_str)
 
 def Generate3dSplay(files):  
     for i, file in enumerate(files):
         print("{0}/{1} {2}".format(i, len(files), file))
-        fileName = file.replace(".mhd","")
-        pngFileNames = FindPngFilesWithFileName(fileName)
+        filename = file.replace(".mhd","")
+        png_filenames = FindPngFilesWithFileName(filename)
         ct_image_layered = []
-        for pngFile in pngFileNames:
+        for pngFile in png_filenames:
             img = Image.open(pngFile, mode='r')
             img_array = np.asarray(img)
             xlim, ylim = img.size
@@ -68,12 +68,12 @@ def Generate3dSplay(files):
         print("showed")
 
 def FindPngFilesWithFileName(fileName):
-    pngFileNames = filter(lambda x: x.startswith(fileName) and x.endswith(".png"), os.listdir("."))
+    png_filenames = filter(lambda x: x.startswith(fileName) and x.endswith(".png"), os.listdir("."))
     extractIndexFromFileName = lambda x: (int(re.search("_[\d]+.png", x).group(0).replace("_", "").replace(".png", "")))
-    pngFiles = [(extractIndexFromFileName(x), x) for x in pngFileNames]
-    pngFiles.sort(key = lambda x: x[0])
-    return pngFiles
+    png_files = [(extractIndexFromFileName(x), x) for x in png_filenames]
+    png_files.sort(key = lambda x: x[0])
+    return png_files
 
 def CheckIfNotRedundantVertex(layer, x, y):
-    xMax, yMax = layer.shape
-    return (x > 0 and y > 0 and layer[x-1][y-1] == 0) or (y > 0 and layer[x][y-1] == 0) or (x < xMax - 1 and y > 0 and layer[x+1][y-1] == 0) or (x < xMax - 1 and layer[x+1][y] == 0) or (x < xMax - 1 and y < yMax - 1 and layer[x+1][y+1] == 0) or (y < yMax - 1 and layer[x][y+1] == 0) or (x > 0 and y < yMax - 1 and layer[x-1][y+1] == 0) or (x > 0 and layer[x-1][y] == 0)
+    x_max, y_max = layer.shape
+    return (x > 0 and y > 0 and layer[x-1][y-1] == 0) or (y > 0 and layer[x][y-1] == 0) or (x < x_max - 1 and y > 0 and layer[x+1][y-1] == 0) or (x < x_max - 1 and layer[x+1][y] == 0) or (x < x_max - 1 and y < y_max - 1 and layer[x+1][y+1] == 0) or (y < y_max - 1 and layer[x][y+1] == 0) or (x > 0 and y < y_max - 1 and layer[x-1][y+1] == 0) or (x > 0 and layer[x-1][y] == 0)
