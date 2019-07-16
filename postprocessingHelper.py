@@ -82,10 +82,10 @@ def CheckIfNotRedundantVertex(layer, x, y):
 def JaccardCoefficient(mask, result):
     intersection = np.logical_and(mask, result)
     union = np.logical_or(mask, result)    
-    return np.sum(intersection)/ np.sum(union)
+    return np.sum(intersection) / np.sum(union)
   
-def DiceCoefficient(mask, result):
-    return 0  
+def DiceCoefficient(jaccardCoefficient):
+    return (2 * jaccardCoefficient) / (jaccardCoefficient - 1)
 
 def GetMaskFileName(image_filename, mask_source_path):
     return list(filter(lambda x: x.replace("_Delmon_CompleteMM", "").startswith(image_filename) and x.endswith(".png"), os.listdir(mask_source_path)))[0]
