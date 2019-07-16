@@ -54,6 +54,7 @@ def Generate3dSplay(files):
                 poly = PolyCollection([verticies])
                 ax.add_collection3d(poly, zs=z)   
         print("polygons built")
+
         # Set axes limits and labels
         ax.set_xlim3d(0, xlim)
         ax.set_ylim3d(0, ylim)
@@ -77,3 +78,14 @@ def FindPngFilesWithFileName(fileName):
 def CheckIfNotRedundantVertex(layer, x, y):
     x_max, y_max = layer.shape
     return (x > 0 and y > 0 and layer[x-1][y-1] == 0) or (y > 0 and layer[x][y-1] == 0) or (x < x_max - 1 and y > 0 and layer[x+1][y-1] == 0) or (x < x_max - 1 and layer[x+1][y] == 0) or (x < x_max - 1 and y < y_max - 1 and layer[x+1][y+1] == 0) or (y < y_max - 1 and layer[x][y+1] == 0) or (x > 0 and y < y_max - 1 and layer[x-1][y+1] == 0) or (x > 0 and layer[x-1][y] == 0)
+
+def JaccardCoefficient(mask, result):
+    intersection = np.logical_and(mask, result)
+    union = np.logical_or(mask, result)    
+    return np.sum(intersection)/ np.sum(union)
+  
+def DiceCoefficient(mask, result):
+    return 0  
+
+def GetMaskFileName(image_filename, mask_source_path):
+    return list(filter(lambda x: x.replace("_Delmon_CompleteMM", "").startswith(image_filename) and x.endswith(".png"), os.listdir(mask_source_path)))[0]

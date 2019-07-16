@@ -1,0 +1,8 @@
+Jaccard's coefficient started at 17-07-2019, 00:04:47.
+Jaccard's coefficient ended at 17-07-2019, 00:05:09 and lasted 0h 0m 22s.
+Dice's coefficient started at 17-07-2019, 00:05:09.
+Dice's coefficient ended at 17-07-2019, 00:05:09 and lasted 0h 0m 0s.
+Jaccard's coefficient started at 17-07-2019, 00:05:13.
+Jaccard's coefficient ended at 17-07-2019, 00:05:20 and lasted 0h 0m 7s.
+Dice's coefficient started at 17-07-2019, 00:05:20.
+Dice's coefficient ended at 17-07-2019, 00:05:20 and lasted 0h 0m 0s.
