@@ -84,8 +84,9 @@ def JaccardCoefficient(mask, result):
     union = np.logical_or(mask, result)    
     return np.sum(intersection) / np.sum(union)
   
-def DiceCoefficient(jaccardCoefficient):
-    return (2 * jaccardCoefficient) / (jaccardCoefficient - 1)
+def DiceCoefficient(mask, result):    
+    intersection = np.logical_and(mask, result)
+    return (2 * np.sum(intersection)) / (np.sum(mask) + np.sum(result))
 
 def GetMaskFileName(image_filename, mask_source_path):
     return list(filter(lambda x: x.replace("_Delmon_CompleteMM", "").startswith(image_filename) and x.endswith(".png"), os.listdir(mask_source_path)))[0]

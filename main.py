@@ -10,9 +10,8 @@ def RunAnalisys():
     for file in files:
         mask = Image.open("./analisys/mask/{0}".format(GetMaskFileName(file, "./analisys/mask")), mode='r')
         result = Image.open("./analisys/result/{0}".format(file), mode='r')
-        jaccardCoefficient = JaccardCoefficient(mask, result)
-        print("Jaccard's coefficient for {0}: {1}".format(file, jaccardCoefficient))  
-        print("Dice's coefficient for {0}: {1}".format(file, DiceCoefficient(jaccardCoefficient)))
+        print("Jaccard's coefficient for {0}: {1}".format(file, JaccardCoefficient(mask, result)))  
+        print("Dice's coefficient for {0}: {1}".format(file, DiceCoefficient(mask, result)))
 
 def PerformGenerations():
     log_file_path = "generation/log.txt"
