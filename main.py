@@ -13,10 +13,10 @@ def RunAnalisys():
     coefs_per_file = []
     for file in mhd_files:   
         file = file.replace(".mhd","") 
-        jaccard_coefs, dice_coefs = ExecuteWithLogs("Analisys for file {0}".format(file), "log.txt", lambda _ = None: RunAnalisysPerRawFile(file))                 
-        GenerateBoxPlotForRawFile(file, jaccard_coefs, dice_coefs)
-        GenerateLinePlotForRawFile(file, jaccard_coefs, dice_coefs)
-        coefs_per_file.append((file, jaccard_coefs, dice_coefs))   
+        coefs = ExecuteWithLogs("Analisys for file {0}".format(file), "log.txt", lambda _ = None: RunAnalisysPerRawFile(file))                 
+        GenerateBoxPlotForRawFile(file, coefs)
+        GenerateLinePlotForRawFile(file, coefs)
+        coefs_per_file.append((file, coefs))   
     GenerateBoxPlotForAllFiles(coefs_per_file)
     GenerateLinePlotForAllFiles(coefs_per_file)
 

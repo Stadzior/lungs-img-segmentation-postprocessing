@@ -9,8 +9,7 @@ import base64
 import io
 import re
 
-MIN_LAYER_INDEX = 0
-MAX_LAYER_INDEX = 468
+LAYER_COUNT = 469
 TARGET_SIZE = (512,512)
 
 def GenerateRawFileFromPngs(files):  
@@ -19,7 +18,7 @@ def GenerateRawFileFromPngs(files):
         filename = file.replace(".mhd","")
         png_files = FindPngFilesWithFileName(filename)
         ct_image_layered = []
-        for i in range(MIN_LAYER_INDEX, MAX_LAYER_INDEX+1):
+        for i in range(LAYER_COUNT):
             png_file_name = next((x[1] for x in png_files if x[0] == i), None)
             img = Image.open(png_file_name, mode='r') if png_file_name is not None else Image.new('L', TARGET_SIZE)
             img_array = np.asarray(img)
@@ -99,9 +98,9 @@ def DiceCoefficient(mask, result):
 def GetMaskFileName(image_filename, mask_source_path):
     return list(filter(lambda x: x.replace("_Delmon_CompleteMM", "").startswith(image_filename) and x.endswith(".png"), os.listdir(mask_source_path)))[0]
 
-def GenerateBoxPlotForRawFile(file, jaccard_coefs, dice_coefs):    
-    jaccard_coefs = list(map(lambda x: x[1], jaccard_coefs))
-    dice_coefs = list(map(lambda x: x[1], dice_coefs))
+def GenerateBoxPlotForRawFile(file, coefs):    
+    jaccard_coefs = list(map(lambda x: x[1], coefs))
+    dice_coefs = list(map(lambda x: x[2], coefs))
     fig = plt.figure(1, figsize=(9, 6))
     ax = fig.add_subplot(111)
     ax.set(xlabel='coefs', ylabel='value',
@@ -109,10 +108,13 @@ def GenerateBoxPlotForRawFile(file, jaccard_coefs, dice_coefs):
     ax.boxplot([jaccard_coefs, dice_coefs])
     fig.savefig("./plots/boxplot_{0}.png".format(file), bbox_inches='tight')
 
-def GenerateLinePlotForRawFile(file, jaccard_coefs, dice_coefs):
-    min_layer = min(jaccard_coefs + dice_coefs)
-    max_layer = max(jaccard_coefs + dice_coefs)
-    x = range(min_layer, max_layer)    
+def GenerateLinePlotForRawFile(file, coefs):
+    x = range(LAYER_COUNT)
+    jaccard_coefs = []
+    dice_coefs = []
+    for i in x:
+        jaccard_coefs.append(next((x[1] for x in coefs if x[0] == i), None))
+        dice_coefs.append(next((x[2] for x in coefs if x[0] == i), None))
     fig, ax = plt.subplots()
     ax.plot(x, jaccard_coefs, "bo-", label = "Jaccard")
     ax.plot(x, dice_coefs, "ro-", label = "Dice")
@@ -123,9 +125,9 @@ def GenerateLinePlotForRawFile(file, jaccard_coefs, dice_coefs):
     plt.show()
 
 def GenerateBoxPlotForAllFiles(coefs_per_file):
-    jaccard_coefs = [item for sublist in list(map(lambda x: x[1], coefs_per_file)) for item in sublist] 
-    dice_coefs = [item for sublist in list(map(lambda x: x[2], coefs_per_file)) for item in sublist] 
-
+    coefs = [item for sublist in list(map(lambda x: x[1], coefs_per_file)) for item in sublist]    
+    jaccard_coefs = list(map(lambda x: x[1], coefs))
+    dice_coefs = list(map(lambda x: x[2], coefs)) 
     fig = plt.figure(1, figsize=(9, 6))
     ax = fig.add_subplot(111)
     ax.set(xlabel='coefs', ylabel='value',
@@ -134,7 +136,20 @@ def GenerateBoxPlotForAllFiles(coefs_per_file):
     fig.savefig("./plots/boxplot_all.png", bbox_inches='tight')
 
 def GenerateLinePlotForAllFiles(coefs_per_file):
-    x = range(1, len(jaccard_coefs))    
+    x = range(LAYER_COUNT)
+    coefs = [item for sublist in list(map(lambda x: x[1], coefs_per_file)) for item in sublist]  
+    jaccard_coefs = []
+    dice_coefs = []
+    for i in x:
+        coefs_for_layer = list(filter(lambda x: x[0] == i, coefs))
+        if (any(coefs_for_layer)):
+            jaccard_coef = sum(list(map(lambda x: x[1], coefs_for_layer)))/len(coefs_for_layer)
+            jaccard_coefs.append(jaccard_coef)
+            dice_coef = sum(list(map(lambda x: x[2], coefs_for_layer)))/len(coefs_for_layer)
+            dice_coefs.append(dice_coef)
+        else:
+            jaccard_coefs.append(None)
+            dice_coefs.append(None)
     fig, ax = plt.subplots()
     ax.plot(x, jaccard_coefs, "bo-", label = "Jaccard")
     ax.plot(x, dice_coefs, "ro-", label = "Dice")
@@ -146,13 +161,11 @@ def GenerateLinePlotForAllFiles(coefs_per_file):
 
 def RunAnalisysPerRawFile(file):
     png_files = FindPngFilesWithFileName(file)
-    jaccard_coefs = []
-    dice_coefs = []
-    for png_file in png_files:
+    coefs = []
+    for index, png_file in png_files:
         jaccard_coef, dice_coef = RunAnalisysPerPngFile(png_file)
-        jaccard_coefs.append(jaccard_coef)
-        dice_coefs.append(dice_coef)
-    return (jaccard_coefs, dice_coefs)
+        coefs.append((index, jaccard_coef, dice_coef))
+    return coefs
 
 def RunAnalisysPerPngFile(file):
     mask = Image.open("./mask/{0}".format(GetMaskFileName(file, "./mask")), mode='r')
