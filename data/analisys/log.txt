@@ -6,3 +6,15 @@ Jaccard's coefficient started at 17-07-2019, 00:05:13.
 Jaccard's coefficient ended at 17-07-2019, 00:05:20 and lasted 0h 0m 7s.
 Dice's coefficient started at 17-07-2019, 00:05:20.
 Dice's coefficient ended at 17-07-2019, 00:05:20 and lasted 0h 0m 0s.
+Analisys for file expi11__1.0__B31f_1018 started at 17-08-2019, 21:12:57.
+Analisys for file expi11__1.0__B31f_1018 ended at 17-08-2019, 21:12:57 and lasted 0h 0m 0s.
+Analisys for file expi11__1.0__B31f_1018 started at 17-08-2019, 21:13:12.
+Analisys for file expi11__1.0__B31f_1018 ended at 17-08-2019, 21:13:12 and lasted 0h 0m 0s.
+Analisys for file expi11__1.0__B31f_1018 started at 17-08-2019, 21:13:36.
+Analisys for file expi11__1.0__B31f_1018 started at 17-08-2019, 21:14:01.
+Analisys for file expi11__1.0__B31f_1018 started at 17-08-2019, 21:18:02.
+Analisys for file expi11__1.0__B31f_1018 ended at 17-08-2019, 21:20:26 and lasted 0h 2m 23s.
+Analisys for file expi11__1.0__B31f_1018 started at 17-08-2019, 21:20:57.
+Analisys for file expi11__1.0__B31f_1018 ended at 17-08-2019, 21:21:35 and lasted 0h 0m 37s.
+Analisys for file expi4__1.0__B31f_62 started at 17-08-2019, 21:21:44.
+Analisys for file expi4__1.0__B31f_62 ended at 17-08-2019, 21:22:00 and lasted 0h 0m 16s.

@@ -73,8 +73,8 @@ def Generate3dSplay(files):
         plt.show()
         print("showed")
 
-def FindPngFilesWithFileName(fileName):
-    png_filenames = filter(lambda x: x.startswith(fileName) and x.endswith(".png"), os.listdir("."))
+def FindPngFilesWithFileName(fileName, dir_path = "."):
+    png_filenames = filter(lambda x: x.startswith(fileName) and x.endswith(".png"), os.listdir(dir_path))
     extractIndexFromFileName = lambda x: (int(re.search("_[\d]+.png", x).group(0).replace("_", "").replace(".png", "")))
     png_files = [(extractIndexFromFileName(x), x) for x in png_filenames]
     png_files.sort(key = lambda x: x[0])
@@ -160,7 +160,7 @@ def GenerateLinePlotForAllFiles(coefs_per_file):
     plt.show()
 
 def RunAnalisysPerRawFile(file):
-    png_files = FindPngFilesWithFileName(file)
+    png_files = FindPngFilesWithFileName(file, "./result")
     coefs = []
     for index, png_file in png_files:
         jaccard_coef, dice_coef = RunAnalisysPerPngFile(png_file)

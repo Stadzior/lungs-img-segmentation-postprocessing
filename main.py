@@ -5,14 +5,19 @@ from postprocessingHelper import GenerateBoxPlotForRawFile, GenerateLinePlotForR
 from postprocessingHelper import GenerateBoxPlotForAllFiles, GenerateLinePlotForAllFiles
 import os
 import sys
+import re
 from PIL import Image
 
 def RunAnalisys():
     os.chdir("./data/analisys")
-    mhd_files = list(filter(lambda x: x.endswith(".mhd"), os.listdir("./result")))    
+    png_files = list(filter(lambda x: x.endswith(".png"), os.listdir("./result")))        
+    raw_filenames = []
+    for png_file in png_files:
+        raw_filename = png_file.replace(re.search(".raw_[\d]+.png", png_file).group(0), "")
+        if (raw_filename not in raw_filenames):
+            raw_filenames.append(raw_filename)
     coefs_per_file = []
-    for file in mhd_files:   
-        file = file.replace(".mhd","") 
+    for file in raw_filenames:   
         coefs = ExecuteWithLogs("Analisys for file {0}".format(file), "log.txt", lambda _ = None: RunAnalisysPerRawFile(file))                 
         GenerateBoxPlotForRawFile(file, coefs)
         GenerateLinePlotForRawFile(file, coefs)
