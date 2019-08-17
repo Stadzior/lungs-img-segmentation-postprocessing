@@ -4,6 +4,7 @@ import os
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.collections import PolyCollection
+import matplotlib as mpl
 import base64
 import io
 import re
@@ -92,3 +93,45 @@ def DiceCoefficient(mask, result):
 
 def GetMaskFileName(image_filename, mask_source_path):
     return list(filter(lambda x: x.replace("_Delmon_CompleteMM", "").startswith(image_filename) and x.endswith(".png"), os.listdir(mask_source_path)))[0]
+
+def GenerateBoxPlotForRawFile(file, jaccard_coefs, dice_coefs):
+    fig = plt.figure(1, figsize=(9, 6))
+    ax = fig.add_subplot(111)
+    ax.set(xlabel='layer position', ylabel='jaccard coefficient',
+        title='Jaccard and Dice coefs boxplot for {0}'.format(file))
+    ax.boxplot([jaccard_coefs, dice_coefs])
+    fig.savefig("./plots/boxplot_{0}".format(file), bbox_inches='tight')
+
+def GenerateLinePlotForRawFile(file, jaccard_coefs, dice_coefs):
+    x = range(1, len(jaccard_coefs))    
+    fig, ax = plt.subplots()
+    ax.plot(x, jaccard_coefs, "bo-", label = "Jaccard")
+    ax.plot(x, dice_coefs, "ro-", label = "Dice")
+    ax.set(xlabel='layer position', ylabel='value',
+        title='Jaccard and Dice coefs per layer for {0}'.format(file))
+    ax.grid()
+    fig.savefig("./plots/lineplot_{0}.png".format(file))
+    plt.show()
+    
+def RunAnalisysPerRawFile(file, generate_boxplot = False, generate_lineplot = False):
+    file = file.replace(".mhd","") 
+    png_files = FindPngFilesWithFileName(file)
+    jaccard_coefs = []
+    dice_coefs = []
+    for png_file in png_files:
+        jaccard_coef, dice_coef = RunAnalisysPerPngFile(png_file)
+        jaccard_coefs.append(jaccard_coef)
+        dice_coefs.append(dice_coef)
+    if (generate_boxplot):
+        GenerateBoxPlotForRawFile(file, jaccard_coefs, dice_coefs)
+    if (generate_lineplot):
+        GenerateLinePlotForRawFile(file, jaccard_coefs, dice_coefs)     
+
+def RunAnalisysPerPngFile(file):
+    mask = Image.open("./mask/{0}".format(GetMaskFileName(file, "./mask")), mode='r')
+    result = Image.open("./result/{0}".format(file), mode='r')
+    jaccard_coef = JaccardCoefficient(mask, result)
+    dice_coef = DiceCoefficient(mask, result)
+    print("Jaccard's coefficient for {0}: {1}".format(file, jaccard_coef))  
+    print("Dice's coefficient for {0}: {1}".format(file, dice_coef))
+    return (jaccard_coef, dice_coef)

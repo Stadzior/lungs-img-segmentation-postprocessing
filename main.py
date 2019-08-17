@@ -1,25 +1,21 @@
 from logHelper import ExecuteWithLogs
-from postprocessingHelper import GenerateRawFileFromPngs, Generate3dSplay, GetMaskFileName, JaccardCoefficient, DiceCoefficient
+from postprocessingHelper import GenerateRawFileFromPngs, Generate3dSplay, GetMaskFileName
+from postprocessingHelper import JaccardCoefficient, DiceCoefficient, RunAnalisysPerRawFile
 import os
 import sys
 from PIL import Image
 
 def RunAnalisys():
-    log_file_path = "analisys/log.txt"
-    files = list(filter(lambda x: x.endswith(".png"), os.listdir("./analisys/result")))    
-    for file in files:
-        mask = Image.open("./analisys/mask/{0}".format(GetMaskFileName(file, "./analisys/mask")), mode='r')
-        result = Image.open("./analisys/result/{0}".format(file), mode='r')
-        print("Jaccard's coefficient for {0}: {1}".format(file, JaccardCoefficient(mask, result)))  
-        print("Dice's coefficient for {0}: {1}".format(file, DiceCoefficient(mask, result)))
+    os.chdir("./data/analisys")
+    mhd_files = list(filter(lambda x: x.endswith(".mhd"), os.listdir("./result")))    
+    for file in mhd_files:
+        ExecuteWithLogs("Analisys for file {0}".format(file), "log.txt", lambda _ = None: RunAnalisysPerRawFile(file))          
 
-def PerformGenerations():
-    log_file_path = "generation/log.txt"
-    files = list(filter(lambda x: x.endswith(".mhd"), os.listdir("./generation")))
-    ExecuteWithLogs("Raw file generation", log_file_path, lambda _ = None: GenerateRawFileFromPngs(files))   
-    #ExecuteWithLogs("file 3D generation", log_file_path, lambda _ = None: Generate3dSplay(files))   
+def PerformGenerations():       
+    os.chdir("./data/generation")
+    files = list(filter(lambda x: x.endswith(".mhd"), os.listdir(".")))
+    ExecuteWithLogs("Raw file generation", "log.txt", lambda _ = None: GenerateRawFileFromPngs(files))   
+    #ExecuteWithLogs("file 3D generation", "log.txt", lambda _ = None: Generate3dSplay(files))   
 
-os.chdir("./data")
 #PerformGenerations()
 RunAnalisys()
-
