@@ -9,17 +9,22 @@ import base64
 import io
 import re
 
+MIN_LAYER_INDEX = 0
+MAX_LAYER_INDEX = 468
+TARGET_SIZE = (512,512)
+
 def GenerateRawFileFromPngs(files):  
     for i, file in enumerate(files):
         print("{0}/{1} {2}".format(i, len(files), file))
         filename = file.replace(".mhd","")
         png_files = FindPngFilesWithFileName(filename)
         ct_image_layered = []
-        for (index, png_file_name) in png_files:
-            img = Image.open(png_file_name, mode='r')
+        for i in range(MIN_LAYER_INDEX, MAX_LAYER_INDEX+1):
+            png_file_name = next((x[1] for x in png_files if x[0] == i), None)
+            img = Image.open(png_file_name, mode='r') if png_file_name is not None else Image.new('L', TARGET_SIZE)
             img_array = np.asarray(img)
             img_str = img_array.tostring()
-            ct_image_layered.append(img_str) 
+            ct_image_layered.append(img_str)
         ct_image_str = b''.join(ct_image_layered)  
         with open("{0}.raw".format(filename), "wb") as rawFile:
             rawFile.write(ct_image_str)
@@ -94,16 +99,20 @@ def DiceCoefficient(mask, result):
 def GetMaskFileName(image_filename, mask_source_path):
     return list(filter(lambda x: x.replace("_Delmon_CompleteMM", "").startswith(image_filename) and x.endswith(".png"), os.listdir(mask_source_path)))[0]
 
-def GenerateBoxPlotForRawFile(file, jaccard_coefs, dice_coefs):
+def GenerateBoxPlotForRawFile(file, jaccard_coefs, dice_coefs):    
+    jaccard_coefs = list(map(lambda x: x[1], jaccard_coefs))
+    dice_coefs = list(map(lambda x: x[1], dice_coefs))
     fig = plt.figure(1, figsize=(9, 6))
     ax = fig.add_subplot(111)
-    ax.set(xlabel='layer position', ylabel='jaccard coefficient',
+    ax.set(xlabel='coefs', ylabel='value',
         title='Jaccard and Dice coefs boxplot for {0}'.format(file))
     ax.boxplot([jaccard_coefs, dice_coefs])
-    fig.savefig("./plots/boxplot_{0}".format(file), bbox_inches='tight')
+    fig.savefig("./plots/boxplot_{0}.png".format(file), bbox_inches='tight')
 
 def GenerateLinePlotForRawFile(file, jaccard_coefs, dice_coefs):
-    x = range(1, len(jaccard_coefs))    
+    min_layer = min(jaccard_coefs + dice_coefs)
+    max_layer = max(jaccard_coefs + dice_coefs)
+    x = range(min_layer, max_layer)    
     fig, ax = plt.subplots()
     ax.plot(x, jaccard_coefs, "bo-", label = "Jaccard")
     ax.plot(x, dice_coefs, "ro-", label = "Dice")
@@ -112,9 +121,30 @@ def GenerateLinePlotForRawFile(file, jaccard_coefs, dice_coefs):
     ax.grid()
     fig.savefig("./plots/lineplot_{0}.png".format(file))
     plt.show()
-    
-def RunAnalisysPerRawFile(file, generate_boxplot = False, generate_lineplot = False):
-    file = file.replace(".mhd","") 
+
+def GenerateBoxPlotForAllFiles(coefs_per_file):
+    jaccard_coefs = [item for sublist in list(map(lambda x: x[1], coefs_per_file)) for item in sublist] 
+    dice_coefs = [item for sublist in list(map(lambda x: x[2], coefs_per_file)) for item in sublist] 
+
+    fig = plt.figure(1, figsize=(9, 6))
+    ax = fig.add_subplot(111)
+    ax.set(xlabel='coefs', ylabel='value',
+        title='Jaccard and Dice coefs boxplot for all')
+    ax.boxplot([jaccard_coefs, dice_coefs])
+    fig.savefig("./plots/boxplot_all.png", bbox_inches='tight')
+
+def GenerateLinePlotForAllFiles(coefs_per_file):
+    x = range(1, len(jaccard_coefs))    
+    fig, ax = plt.subplots()
+    ax.plot(x, jaccard_coefs, "bo-", label = "Jaccard")
+    ax.plot(x, dice_coefs, "ro-", label = "Dice")
+    ax.set(xlabel='layer position', ylabel='value',
+        title='Jaccard and Dice coefs per layer for all')
+    ax.grid()
+    fig.savefig("./plots/lineplot_all.png")
+    plt.show()
+
+def RunAnalisysPerRawFile(file):
     png_files = FindPngFilesWithFileName(file)
     jaccard_coefs = []
     dice_coefs = []
@@ -122,10 +152,7 @@ def RunAnalisysPerRawFile(file, generate_boxplot = False, generate_lineplot = Fa
         jaccard_coef, dice_coef = RunAnalisysPerPngFile(png_file)
         jaccard_coefs.append(jaccard_coef)
         dice_coefs.append(dice_coef)
-    if (generate_boxplot):
-        GenerateBoxPlotForRawFile(file, jaccard_coefs, dice_coefs)
-    if (generate_lineplot):
-        GenerateLinePlotForRawFile(file, jaccard_coefs, dice_coefs)     
+    return (jaccard_coefs, dice_coefs)
 
 def RunAnalisysPerPngFile(file):
     mask = Image.open("./mask/{0}".format(GetMaskFileName(file, "./mask")), mode='r')
