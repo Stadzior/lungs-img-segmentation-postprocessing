@@ -122,8 +122,6 @@ def GenerateLinePlotForRawFile(file, coefs):
         title='Jaccard and Dice coefs per layer for {0}'.format(file))
     ax.grid()
     fig.savefig("./plots/lineplot_{0}.png".format(file))
-    plt.show()
-
 def GenerateBoxPlotForAllFiles(coefs_per_file):
     coefs = [item for sublist in list(map(lambda x: x[1], coefs_per_file)) for item in sublist]    
     jaccard_coefs = list(map(lambda x: x[1], coefs))
@@ -157,7 +155,6 @@ def GenerateLinePlotForAllFiles(coefs_per_file):
         title='Jaccard and Dice coefs per layer for all')
     ax.grid()
     fig.savefig("./plots/lineplot_all.png")
-    plt.show()
 
 def RunAnalisysPerRawFile(file):
     png_files = FindPngFilesWithFileName(file, "./result")
