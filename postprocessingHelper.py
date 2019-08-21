@@ -107,6 +107,7 @@ def GenerateBoxPlotForRawFile(file, coefs):
         title='Jaccard and Dice coefs boxplot for {0}'.format(file))
     ax.boxplot([jaccard_coefs, dice_coefs])
     fig.savefig("./plots/boxplot_{0}.png".format(file), bbox_inches='tight')
+    plt.clf()
 
 def GenerateLinePlotForRawFile(file, coefs):
     x = range(LAYER_COUNT)
@@ -122,6 +123,7 @@ def GenerateLinePlotForRawFile(file, coefs):
         title='Jaccard and Dice coefs per layer for {0}'.format(file))
     ax.grid()
     fig.savefig("./plots/lineplot_{0}.png".format(file))
+    plt.clf()
 def GenerateBoxPlotForAllFiles(coefs_per_file):
     coefs = [item for sublist in list(map(lambda x: x[1], coefs_per_file)) for item in sublist]    
     jaccard_coefs = list(map(lambda x: x[1], coefs))
@@ -132,6 +134,7 @@ def GenerateBoxPlotForAllFiles(coefs_per_file):
         title='Jaccard and Dice coefs boxplot for all')
     ax.boxplot([jaccard_coefs, dice_coefs])
     fig.savefig("./plots/boxplot_all.png", bbox_inches='tight')
+    plt.clf()
 
 def GenerateLinePlotForAllFiles(coefs_per_file):
     x = range(LAYER_COUNT)
@@ -155,6 +158,7 @@ def GenerateLinePlotForAllFiles(coefs_per_file):
         title='Jaccard and Dice coefs per layer for all')
     ax.grid()
     fig.savefig("./plots/lineplot_all.png")
+    plt.clf()
 
 def RunAnalisysPerRawFile(file):
     png_files = FindPngFilesWithFileName(file, "./result")
