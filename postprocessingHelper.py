@@ -12,21 +12,18 @@ import re
 LAYER_COUNT = 469
 TARGET_SIZE = (512,512)
 
-def GenerateRawFileFromPngs(files):  
-    for i, file in enumerate(files):
-        print("{0}/{1} {2}".format(i, len(files), file))
-        filename = file.replace(".mhd","")
-        png_files = FindPngFilesWithFileName(filename)
-        ct_image_layered = []
-        for i in range(LAYER_COUNT):
-            png_file_name = next((x[1] for x in png_files if x[0] == i), None)
-            img = Image.open(png_file_name, mode='r') if png_file_name is not None else Image.new('L', TARGET_SIZE)
-            img_array = np.asarray(img)
-            img_str = img_array.tostring()
-            ct_image_layered.append(img_str)
-        ct_image_str = b''.join(ct_image_layered)  
-        with open("{0}.raw".format(filename), "wb") as rawFile:
-            rawFile.write(ct_image_str)
+def GenerateRawFileFromPngs(raw_file):  
+    png_files = FindPngFilesWithFileName(raw_file)
+    ct_image_layered = []
+    for i in range(LAYER_COUNT):
+        png_file_name = next((x[1] for x in png_files if x[0] == i), None)
+        img = Image.open(png_file_name, mode='r') if png_file_name is not None else Image.new('L', TARGET_SIZE)
+        img_array = np.asarray(img.convert('L'))
+        img_str = img_array.tostring()
+        ct_image_layered.append(img_str)
+    ct_image_str = b''.join(ct_image_layered)  
+    with open("{0}.raw".format(raw_file), "wb") as rawFile:
+        rawFile.write(ct_image_str)
 
 def Generate3dSplay(files):  
     for i, file in enumerate(files):
@@ -161,7 +158,7 @@ def GenerateLinePlotForAllFiles(coefs_per_file):
     plt.clf()
 
 def RunAnalisysPerRawFile(file):
-    png_files = FindPngFilesWithFileName(file, "./result")
+    png_files = FindPngFilesWithFileName(file, "../result")
     coefs = []
     for index, png_file in png_files:
         jaccard_coef, dice_coef = RunAnalisysPerPngFile(png_file)
@@ -170,9 +167,17 @@ def RunAnalisysPerRawFile(file):
 
 def RunAnalisysPerPngFile(file):
     mask = Image.open("./mask/{0}".format(GetMaskFileName(file, "./mask")), mode='r')
-    result = Image.open("./result/{0}".format(file), mode='r')
+    result = Image.open("../result/{0}".format(file), mode='r')
     jaccard_coef = JaccardCoefficient(mask, result)
     dice_coef = DiceCoefficient(mask, result)
     print("Jaccard's coefficient for {0}: {1}".format(file, jaccard_coef))  
     print("Dice's coefficient for {0}: {1}".format(file, dice_coef))
     return (jaccard_coef, dice_coef)
+
+def ExtractRawFileNamesFromPngFiles(png_files):
+    raw_filenames = []
+    for png_file in png_files:
+        raw_filename = png_file.replace(re.search(".raw_[\d]+.png", png_file).group(0), "")
+        if (raw_filename not in raw_filenames):
+            raw_filenames.append(raw_filename)
+    return raw_filenames

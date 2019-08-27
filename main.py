@@ -3,6 +3,7 @@ from postprocessingHelper import GenerateRawFileFromPngs, Generate3dSplay, GetMa
 from postprocessingHelper import JaccardCoefficient, DiceCoefficient, RunAnalisysPerRawFile
 from postprocessingHelper import GenerateBoxPlotForRawFile, GenerateLinePlotForRawFile
 from postprocessingHelper import GenerateBoxPlotForAllFiles, GenerateLinePlotForAllFiles
+from postprocessingHelper import ExtractRawFileNamesFromPngFiles
 import os
 import sys
 import re
@@ -11,32 +12,30 @@ from shutil import copyfile, rmtree
 
 def RunAnalisys():   
     os.chdir("./data/analisys")        
-    png_files = list(filter(lambda x: x.endswith(".png"), os.listdir("./result")))    
-    raw_filenames = []
-    for png_file in png_files:
-        raw_filename = png_file.replace(re.search(".raw_[\d]+.png", png_file).group(0), "")
-        if (raw_filename not in raw_filenames):
-            raw_filenames.append(raw_filename)
+    png_files = list(filter(lambda x: x.endswith(".png"), os.listdir("../result")))    
+    raw_files = ExtractRawFileNamesFromPngFiles(png_files)
     coefs_per_file = []
-    for file in raw_filenames:   
-        coefs = ExecuteWithLogs("Analisys for file {0}".format(file), "log.txt", lambda _ = None: RunAnalisysPerRawFile(file))                 
-        GenerateBoxPlotForRawFile(file, coefs)
-        GenerateLinePlotForRawFile(file, coefs)
-        coefs_per_file.append((file, coefs))   
+    for i, raw_file in enumerate(raw_files):   
+        print("{0}/{1} {2}".format(i+1, len(raw_files), raw_file))
+        coefs = ExecuteWithLogs("Analisys for file {0}".format(raw_file), "log.txt", lambda _ = None: RunAnalisysPerRawFile(raw_file))                 
+        GenerateBoxPlotForRawFile(raw_file, coefs)
+        GenerateLinePlotForRawFile(raw_file, coefs)
+        coefs_per_file.append((raw_file, coefs))   
+    for raw_file, coefs in coefs_per_file:
+        jaccard_raw_file = sum(list(map(lambda x: x[1], coefs)))/len(coefs)
+        dice_raw_file = sum(list(map(lambda x: x[2], coefs)))/len(coefs)
+        print("{0} Jaccard: {1} Dice: {2}".format(raw_file, jaccard_raw_file, dice_raw_file))
+
     GenerateBoxPlotForAllFiles(coefs_per_file)
     GenerateLinePlotForAllFiles(coefs_per_file)
 
 def PerformGenerations():       
     os.chdir("./data/generation")
-    files = list(filter(lambda x: x.endswith(".mhd"), os.listdir(".")))
-    ExecuteWithLogs("Raw file generation", "log.txt", lambda _ = None: GenerateRawFileFromPngs(files))   
-    
-def CopyMasksForAnalisys():  
-    os.chdir("./data/analisys")       
-    png_files = list(filter(lambda x: x.endswith(".png"), os.listdir("./source/mask")))   
-    for i, png_file in enumerate(png_files):          
-        copyfile("./source/mask/{0}".format(png_file), "./mask/{0}".format(png_file))
-        print("{0}/{1} {2}".format(i+1, len(png_files), png_file))
+    png_files = list(filter(lambda x: x.endswith(".png"), os.listdir("../result")))    
+    raw_files = ExtractRawFileNamesFromPngFiles(png_files)
+    for i, raw_file in enumerate(raw_files):        
+        print("{0}/{1} {2}".format(i+1, len(raw_files), raw_file))
+        ExecuteWithLogs("Raw file generation {0}".format(raw_file), "log.txt", lambda _ = None: GenerateRawFileFromPngs(raw_file))   
 
 RunAnalisys()
 #PerformGenerations()
