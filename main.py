@@ -35,7 +35,7 @@ def PerformGenerations():
     raw_files = ExtractRawFileNamesFromPngFiles(png_files)
     for i, raw_file in enumerate(raw_files):        
         print("{0}/{1} {2}".format(i+1, len(raw_files), raw_file))
-        ExecuteWithLogs("Raw file generation {0}".format(raw_file), "log.txt", lambda _ = None: GenerateRawFileFromPngs(raw_file))   
+        ExecuteWithLogs("Raw file generation {0}".format(raw_file), "log.txt", lambda _ = None: GenerateRawFileFromPngs(raw_file, "../result"))   
 
-RunAnalisys()
-#PerformGenerations()
+#RunAnalisys()
+PerformGenerations()

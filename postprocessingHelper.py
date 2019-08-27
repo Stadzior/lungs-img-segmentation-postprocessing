@@ -12,13 +12,17 @@ import re
 LAYER_COUNT = 469
 TARGET_SIZE = (512,512)
 
-def GenerateRawFileFromPngs(raw_file):  
-    png_files = FindPngFilesWithFileName(raw_file)
+def GenerateRawFileFromPngs(raw_file, dir_path):  
+    png_files = FindPngFilesWithFileName(raw_file, dir_path)
     ct_image_layered = []
     for i in range(LAYER_COUNT):
-        png_file_name = next((x[1] for x in png_files if x[0] == i), None)
-        img = Image.open(png_file_name, mode='r') if png_file_name is not None else Image.new('L', TARGET_SIZE)
-        img_array = np.asarray(img.convert('L'))
+        png_file_name = next((x[1] for x in png_files if x[0] == i), None)        
+        if png_file_name is not None:
+            img = Image.open("{0}/{1}".format(dir_path, png_file_name), mode='r')
+            img = img.convert('L')
+        else:
+            img = Image.new('L', TARGET_SIZE)
+        img_array = np.asarray(img)
         img_str = img_array.tostring()
         ct_image_layered.append(img_str)
     ct_image_str = b''.join(ct_image_layered)  
