@@ -9,13 +9,13 @@ import base64
 import io
 import re
 
-LAYER_COUNT = 469
+LAYER_RANGE = (251,308)
 TARGET_SIZE = (512,512)
 
 def GenerateRawFileFromPngs(raw_file, dir_path):  
     png_files = FindPngFilesWithFileName(raw_file, dir_path)
     ct_image_layered = []
-    for i in range(LAYER_COUNT):
+    for i in range(LAYER_RANGE[0], LAYER_RANGE[1]):
         png_file_name = next((x[1] for x in png_files if x[0] == i), None)        
         if png_file_name is not None:
             img = Image.open("{0}/{1}".format(dir_path, png_file_name), mode='r')
@@ -29,61 +29,12 @@ def GenerateRawFileFromPngs(raw_file, dir_path):
     with open("{0}.raw".format(raw_file), "wb") as rawFile:
         rawFile.write(ct_image_str)
 
-def Generate3dSplay(files):  
-    for i, file in enumerate(files):
-        print("{0}/{1} {2}".format(i, len(files), file))
-        filename = file.replace(".mhd","")
-        png_filenames = FindPngFilesWithFileName(filename)
-        ct_image_layered = []
-        for pngFile in png_filenames:
-            img = Image.open(pngFile, mode='r')
-            img_array = np.asarray(img)
-            xlim, ylim = img.size
-            xlim = xlim-1
-            ylim = ylim-1
-            ct_image_layered.append(img_array) 
-        zlim = len(ct_image_layered)-1
-        #create figure
-        fig = plt.figure()
-        ax = fig.gca(projection='3d')
-    
-        # plotting
-        print("before plotting")
-        for z in range (0, zlim):
-            print("{0}/{1}".format(z+1, zlim+1))
-            verticies = []
-            for x in range (0, xlim):
-                for y in range (0, ylim):
-                    if (ct_image_layered[z][y][x] > 0 and CheckIfNotRedundantVertex(ct_image_layered[z], x, y)):
-                        verticies.append((x,y))
-            if (verticies):
-                poly = PolyCollection([verticies])
-                ax.add_collection3d(poly, zs=z)   
-        print("polygons built")
-
-        # Set axes limits and labels
-        ax.set_xlim3d(0, xlim)
-        ax.set_ylim3d(0, ylim)
-        ax.set_zlim3d(0, zlim)
-        ax.set_xlabel('Coronal')
-        ax.set_ylabel('Sagittal')
-        ax.set_zlabel('Axial')
-
-        # Customize the view angle so it's easier to see that the scatter points lie on the plane y=0
-        ax.view_init(elev=20., azim=-35)
-        plt.show()
-        print("showed")
-
 def FindPngFilesWithFileName(fileName, dir_path = "."):
     png_filenames = filter(lambda x: x.startswith(fileName) and x.endswith(".png"), os.listdir(dir_path))
     extractIndexFromFileName = lambda x: (int(re.search("_[\d]+.png", x).group(0).replace("_", "").replace(".png", "")))
     png_files = [(extractIndexFromFileName(x), x) for x in png_filenames]
     png_files.sort(key = lambda x: x[0])
     return png_files
-
-def CheckIfNotRedundantVertex(layer, x, y):
-    x_max, y_max = layer.shape
-    return (x > 0 and y > 0 and layer[x-1][y-1] == 0) or (y > 0 and layer[x][y-1] == 0) or (x < x_max - 1 and y > 0 and layer[x+1][y-1] == 0) or (x < x_max - 1 and layer[x+1][y] == 0) or (x < x_max - 1 and y < y_max - 1 and layer[x+1][y+1] == 0) or (y < y_max - 1 and layer[x][y+1] == 0) or (x > 0 and y < y_max - 1 and layer[x-1][y+1] == 0) or (x > 0 and layer[x-1][y] == 0)
 
 def JaccardCoefficient(mask, result):
     intersection = np.logical_and(mask, result)
@@ -111,7 +62,7 @@ def GenerateBoxPlotForRawFile(file, coefs):
     plt.clf()
 
 def GenerateLinePlotForRawFile(file, coefs):
-    x = range(LAYER_COUNT)
+    x = range(LAYER_RANGE[0], LAYER_RANGE[1])
     jaccard_coefs = []
     dice_coefs = []
     for i in x:
@@ -138,7 +89,7 @@ def GenerateBoxPlotForAllFiles(coefs_per_file):
     plt.clf()
 
 def GenerateLinePlotForAllFiles(coefs_per_file):
-    x = range(LAYER_COUNT)
+    x = range(LAYER_RANGE[0], LAYER_RANGE[1])
     coefs = [item for sublist in list(map(lambda x: x[1], coefs_per_file)) for item in sublist]  
     jaccard_coefs = []
     dice_coefs = []
