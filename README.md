@@ -16,7 +16,7 @@ The following project was tested on Python 3.6.8 64bit on Windows 10.
     - segmentation results to `.\data\result`
 2. You can customize your run in [main.py](main.py) (e.g. turn of raw file generation and draw plots only).
 3. Run [main.py](main.py).
-4. The progress should be visible on output window and under http://localhost:6006/.
+4. The progress should be visible on output window.
 5. After the process termination you can find:
     - box and line plots in `.\data\analisys\plots`
     - generated raw file in `.\data\generation`
