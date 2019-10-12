@@ -106,10 +106,4 @@ venv.bak/
 #vscode
 .vscode
 
-#datafiles
-*.mhd
-*.raw
-*.npy
-*.png
 *.ini
-data/log.txt
